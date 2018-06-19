@@ -1,0 +1,16 @@
+if issues.length
+  each issue in issues
+    .media(data-issue-id=issue.id)
+      .media-left
+        a(href='/user/' + issue.userId)
+          img.media-object(width=64 height=64 src='/' + issue.avatar, alt=issue.name)
+      .media-body
+        h4.media-heading 
+          a(href='/user/' + issue.userId)= issue.name
+          if (user && user.id === issue.userId)
+            button.btn.btn-link.pull-right.delete-issue(data-issue-id=issue.id) 删除
+        p= issue.content
+        div
+          button.btn.btn-small.toggle-comment 评论
+else
+  p 空空如也

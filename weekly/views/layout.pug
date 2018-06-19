@@ -1,0 +1,80 @@
+doctype html
+
+html
+  head
+    meta(charset="UTF-8")
+    title 周报
+    link(rel="stylesheet" href="/css/bootstrap.min.css")
+  body
+    div.container
+      nav.navbar.navbar-default
+        div.container-fluid
+          div.collapse.navbar-collapse
+            ul.nav.navbar-nav
+              li
+                a(href="/") 首页
+            ul.nav.navbar-nav.navbar-right
+              if user
+                li
+                  a(href="/user/" + user.id)= user.name
+                li
+                  a(href="/issue") 撰写
+                li
+                  a(href="/logout") 登出
+              else
+                li
+                  a(href="/login") 登陆
+                li
+                  a(href="/register") 注册
+      
+      block content
+
+      footer.text-center &copy;
+
+      script(src="/js/lodash-4.17.5.min.js")
+      script(src="/js/jquery-3.3.1.min.js")
+      script.
+        $(function(){
+          $('button.delete-issue').click(async function(){
+            var id = this.dataset.issueId
+            await $.ajax({
+              method: 'delete',
+              url: '/issue/' + id
+            })
+            $(this).closest('.media').remove()
+          })
+
+          $('body').on('click', '.comment-form button[type="submit"]', async function(e) {
+            var content = this.form.elements.content.value
+            var issueId = $(this).closest('.media')[0].dataset.issueId
+            //- debugger
+            $.post(`/comment/${issueId}`,{
+              content,
+            }, (result) => {
+              console.log(result)
+              $(this.form).before(`<div>${result.data.content}</div>`)
+            })
+
+            e.preventDefault()
+          })
+
+          $('button.toggle-comment').click(async function(){
+            var issueId = $(this).closest('.media').data('issue-id')
+            var data = await $.get(`/issue/${issueId}/comments`)
+            console.log(data)
+            $(this).parent().append(`
+              ${
+                data.comments.map(c => {
+                  return `
+                    <div>${_.escape(c.content)}</div>
+                  `
+                }).join('')
+              }
+              <form class="comment-form">
+                <textarea name="content" class="form-control" rows="3"></textarea>
+                <button type="submit" class="btn btn-primary">提交</button>
+              </form>
+            `)
+          })
+        })
+      block script

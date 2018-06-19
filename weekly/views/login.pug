@@ -1,0 +1,14 @@
+extends layout.pug
+
+
+block content
+  .container
+    h2 登陆
+    form(action='/login' method='post')
+      .form-group
+        label(for='username') User Name
+        input#username.form-control(type='text' name='username' required='' placeholder='User Name')
+      .form-group
+        label(for='password') Password
+        input#password.form-control(type='password' name='password', placeholder='Password')
+      button.btn.btn-primary(type='submit') Submit

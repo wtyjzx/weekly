@@ -1,0 +1,18 @@
+extends layout.pug
+
+
+block content
+  .container
+    h2 注册
+    form(action='/register' enctype="multipart/form-data" method='post')
+      .form-group
+        label(for='username') User Name
+        input#username.form-control(type='text' name='username' required='' placeholder='User Name')
+      .form-group
+        label(for='password') Password
+        input#password.form-control(type='password' name='password' placeholder='Password')
+      .form-group
+        label(for='avatar') Avatar
+        input#avatar(type='file' name='avatar')
+        p.help-block Example block-level help text here.
+      button.btn.btn-primary(type='submit') Submit

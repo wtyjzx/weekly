@@ -1,0 +1,44 @@
+extends layout.pug
+
+
+block content
+  dl.dl-horizontal
+    dt 用户id
+    dd= currUser.id
+    dt 用户名
+    dd= currUser.name
+    dt 头像
+    dd
+      img(src='/' + currUser.avatar)
+
+  if (!user)
+    a.btn.btn-success(href="/login") 登陆以关注
+  else
+    if (currUser.id !== user.id)
+      button.btn.toggle-follow(class=isFollowing ? 'btn-default' : 'btn-primary'  data-user-id=currUser.id data-is-following=isFollowing ? 'true': 'false')= isFollowing ? '取消关注' : '关注'
+
+
+  include issue-list.pug
+
+block script
+  script.
+    $(function(){
+      $('.toggle-follow').click(async function(){
+        if (this.dataset.isFollowing === 'true') {
+          await $.ajax({
+            method: 'delete',
+            url: '/follow/' + this.dataset.userId,
+          })
+          this.innerText = '关注'
+          this.dataset.isFollowing = false
+          this.classList.toggle('btn-primary')
+          this.classList.toggle('btn-default')
+        } else {
+          await $.post('/follow/' + this.dataset.userId)
+          this.innerText = '取消关注'
+          this.dataset.isFollowing = true
+          this.classList.toggle('btn-primary')
+          this.classList.toggle('btn-default')
+        }
+      })
+    })

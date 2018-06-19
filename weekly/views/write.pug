@@ -1,0 +1,10 @@
+extends layout.pug
+
+
+block content
+  .container
+    form(action="/issue" method="post")
+      .form-group
+        label(for="username") 撰写周报
+        textarea(name="content" rows=8 placeholder="Weekly Content" class="form-control")
+      button.btn.btn-primary(type="submit") Submit
